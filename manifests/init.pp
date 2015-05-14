@@ -59,21 +59,25 @@ class chkrootkit (
     ensure_packages($::chkrootkit::package)
 
     if $diff_mode {
+        # lint:ignore:quoted_booleans
         $final_config = merge($::chkrootkit::config, { 'DIFF_MODE' => 'true' })
+        # lint:endignore
 
         exec { 'create-today-log':
-            command     => $cron_script,
-            creates     => "${log_dir}/$today_log",
-            require     => File[$cron_script],
-            before      => Exec['copy-today-log-to-expected-log']
+            command => $cron_script,
+            creates => "${log_dir}/${today_log}",
+            require => File[$cron_script],
+            before  => Exec['copy-today-log-to-expected-log']
         }
 
         exec { 'copy-today-log-to-expected-log':
-            command     => "/bin/cp ${log_dir}/${today_log} ${log_dir}/${expected_log}",
-            creates     => "${log_dir}/$expected_log"
+            command => "/bin/cp ${log_dir}/${today_log} ${log_dir}/${expected_log}",
+            creates => "${log_dir}/${expected_log}"
         }
     } else {
+        # lint:ignore:quoted_booleans
         $final_config = merge($::chkrootkit::config, { 'DIFF_MODE' => 'false' })
+        # lint:endignore
     }
 
     $changes_array = join_keys_to_values($final_config, ' \'"')
@@ -88,22 +92,22 @@ class chkrootkit (
     }
 
     file { '/etc/cron.daily/chkrootkit':
-        ensure => absent,
+        ensure  => absent,
         require => Package[$::chkrootkit::package]
     }
 
     file { $cron_script:
-        ensure      => present,
-        content     => template($cron_template),
-        owner       => 'root',
-        group       => 'root',
-        mode        => '0755'
+        ensure  => present,
+        content => template($cron_template),
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755'
     }
 
     cron { 'chkrootkit':
-        command     => $cron_script,
-        user        => 'root',
-        minute      => $cron_minute,
-        hour        => $cron_hour
+        command => $cron_script,
+        user    => 'root',
+        minute  => $cron_minute,
+        hour    => $cron_hour
     }
 }

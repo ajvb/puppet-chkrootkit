@@ -7,9 +7,10 @@ group :rake, :test do
 end
 
 group :rake do
-  gem 'rspec-puppet', :git => 'git://github.com/joshcooper/rspec-puppet.git', :branch => 'dont-set-libdir'
-  gem 'rake',         '>=0.9.2.2'
-  gem 'puppet-lint',  '>=1.0.1'
+  gem 'rspec-puppet',       :git => 'git://github.com/joshcooper/rspec-puppet.git', :branch => 'dont-set-libdir'
+  gem 'rake',               '>=0.9.2.2'
+  gem 'puppet-lint',        '>=1.0.1'
+  gem 'metadata-json-lint', '>=0.0.6'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
