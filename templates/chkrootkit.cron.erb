@@ -1,0 +1,51 @@
+#!/bin/sh
+
+set -e
+
+CHKROOTKIT=<%= @chkrootkit %>
+CF=<%= @cf %>
+LOG_DIR=<%= @log_dir %>
+
+if [ ! -x $CHKROOTKIT ]; then
+  exit 0
+fi
+
+if [ -f $CF ]; then
+    . $CF
+fi
+
+if [ "$RUN_DAILY" = "true" ]; then
+    if [ "$DIFF_MODE" = "true" ]; then
+                eval $CHKROOTKIT $RUN_DAILY_OPTS > $LOG_DIR/<%= @today_log -%>.raw 2>&1
+                # the sed expression replaces the messages about /sbin/dhclient3 /usr/sbin/dhcpd3
+                # with a message that is the same whatever order eth0 and eth1 were scanned
+                sed -r -e 's,eth(0|1)(:[0-9])?: PACKET SNIFFER\((/sbin/dhclient3|/usr/sbin/dhcpd3)\[[0-9]+\]\),eth\[0|1\]: PACKET SNIFFER\([dhclient3|dhcpd3]{PID}\),' \
+                -e 's/(! \w+\s+)[ 0-9]{4}[0-9]/\1#####/' $LOG_DIR/<%= @today_log -%>.raw > $LOG_DIR/<%= @today_log %>
+        if [ ! -f $LOG_DIR/<%= @expected_log -%> ]; then
+                        echo "ERROR: No file $LOG_DIR/<%= @expected_log -%>"
+                        echo "This file should contain expected output from chkrootkit"
+                        echo
+                        echo "Today's run produced the following output:"
+                        echo "--- [ BEGIN: cat $LOG_DIR/<%= @today_log -%>  ] ---"
+                        cat $LOG_DIR/<%= @today_log %>
+                        echo "--- [ END: cat $LOG_DIR/<%= @today_log -%> ] ---"
+                        echo
+                        echo "To create this file containing all output from today's run, do (as root)"
+                        echo "# cp -a $LOG_DIR/<%= @today_log -%> $LOG_DIR/<%= @expected_log -%>"
+                        echo "# (note that unedited output is in $LOG_DIR/<%= @today_log -%>.raw)"
+                elif ! diff -q $LOG_DIR/<%= @expected_log -%> $LOG_DIR/<%= @today_log -%> > /dev/null 2>&1; then
+                        echo "ERROR: chkrootkit output was not as expected."
+                        echo
+                        echo "The difference is:"
+                        echo "---[ BEGIN: diff -u $LOG_DIR/<%= @expected_log -%> $LOG_DIR/<%= @today_log -%> ] ---"
+                        diff -u $LOG_DIR/<%= @expected_log -%> $LOG_DIR/<%= @today_log -%> || true
+                        echo "---[ END: diff -u $LOG_DIR/<%= @expected_log -%> $LOG_DIR/<%= @today_log -%> ] ---"
+                        echo
+                            echo "To update the expected output, run (as root)"
+                        echo "#  cp -a -f $LOG_DIR/<%= @today_log -%> $LOG_DIR/<%= @expected_log -%>"
+                        echo "# (note that unedited output is in $LOG_DIR/<%= @today_log -%>.raw)"
+        fi
+    else
+        eval $CHKROOTKIT $RUN_DAILY_OPTS
+    fi
+fi
