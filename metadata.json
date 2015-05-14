@@ -2,7 +2,7 @@
   "name": "mmarod-chkrootkit",
   "version": "0.0.1",
   "author": "Michael Marod",
-  "summary": "Puppet chkrootkit module",
+  "summary": "Puppet chkrootkit Module",
   "license": "Apache License, Version 2.0",
   "source": "https://github.com/mmarod/puppet-chkrootkit.git",
   "project_page": "http://github.com/mmarod/puppet-chkrootkit",
