@@ -91,7 +91,7 @@ describe 'chkrootkit' do
     } end
 
     describe_augeas 'configure-chkrootkit', :lens => 'Shellvars', :target => 'etc/chkrootkit.conf' do
-      it 'should change RUN_DAILY and DIFF_MODE' do
+      it 'should set DIFF_MODE to "false"' do
         should execute.with_change
         aug_get('DIFF_MODE').should == '"false"'
         should execute.idempotently
@@ -133,7 +133,7 @@ describe 'chkrootkit' do
     } end
 
     describe_augeas 'configure-chkrootkit', :lens => 'Shellvars', :target => 'etc/chkrootkit.conf' do
-      it 'should change RUN_DAILY and DIFF_MODE' do
+      it 'should se DIFF_MODE to "true"' do
         should execute.with_change
         aug_get('DIFF_MODE').should == '"true"'
         should execute.idempotently
