@@ -34,7 +34,7 @@ class chkrootkit (
     $package        = 'chkrootkit',
     $manage_cron    = false,
     $cron_script    = '/usr/local/bin/chkrootkit',
-    $cron_template  = 'chkrootkit/chkrootkit.cron.erb',
+    $cron_template  = 'chkrootkit/chkrootkit.erb',
     $cron_minute    = 25,
     $cron_hour      = 6,
     $cf             = '/etc/chkrootkit.conf',
