@@ -75,6 +75,11 @@ class chkrootkit (
         $ensure_cron_managed = 'absent'
     }
 
+    $cron_environment = $mailto ? {
+        undef   => undef,
+        default => "MAILTO=${mailto}"
+    }
+
     # lint:ignore:quoted_booleans
     if $::chkrootkit::run_daily or $::chkrootkit::manage_cron {
         $run_daily_str = 'true'
@@ -137,6 +142,6 @@ class chkrootkit (
         user        => 'root',
         minute      => $cron_minute,
         hour        => $cron_hour,
-        environment => "MAILTO=${mailto}"
+        environment => $cron_environment
     }
 }
