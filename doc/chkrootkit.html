@@ -102,17 +102,14 @@
       <div class="inline"><p>Standard configuration with Hiera</p></div>
       <pre class="example code"><code><span>include '::chkrootkit'
 chkrootkit::diff_mode: true
-chkrootkit::config:
-  RUN_DAILY: 'true'
-  RUN_DAILY_OPTS: '-q'</span></code></pre>
+chkrootkit::run_daily: true:
+chkrootkit::run_daily_opts: '-q'</span></code></pre>
     
       <div class="inline"><p>Standard configuration directly setting variables</p></div>
       <pre class="example code"><code><span>class { 'chkrootkit':
-  diff_mode     => true,
-  config        => {
-    'RUN_DAILY'         => 'true',
-    'RUN_DAILY_OPTS'    => '-q',
-  }
+  diff_mode         => true,
+  run_daily         => true,
+  run_daily_opts    => '-q',
 }</span></code></pre>
     
     </div>
@@ -123,13 +120,13 @@ chkrootkit::config:
 <h2>Parameter Summary</h2>
 <div class="tags">
   <ul class="param">
-    <li><span class="name">package </span><span class="type">(<tt>String</tt>)</span><tt> => 'chkrootkit'</tt>- <div class="inline"><p> The name of the chkrootkit package. </p></div></li><li><span class="name">cron_script </span><span class="type">(<tt>String</tt>)</span><tt> => '/usr/local/bin/chkrootkit'</tt>- <div class="inline"><p> The path to the script that cron will run. </p></div></li><li><span class="name">cron_template </span><span class="type">(<tt>String</tt>)</span><tt> => 'chkrootkit/chkrootkit.cron.erb'</tt>- <div class="inline"><p> The template to use for creating cron_script. </p></div></li><li><span class="name">cron_minute </span><span class="type">(<tt>Integer</tt>)</span><tt> => 25</tt>- <div class="inline"><p> The minute to pass to the cron entry. </p></div></li><li><span class="name">cron_hour </span><span class="type">(<tt>Integer</tt>)</span><tt> => 6</tt>- <div class="inline"><p> The hour to pass to the cron entry. </p></div></li><li><span class="name">cf </span><span class="type">(<tt>String</tt>)</span><tt> => '/etc/chkrootkit.conf'</tt>- <div class="inline"><p> The path to chkrootkit.conf. </p></div></li><li><span class="name">chkrootkit </span><span class="type">(<tt>String</tt>)</span><tt> => '/usr/sbin/chkrootkit'</tt>- <div class="inline"><p> The path to the chkrootkit binary. </p></div></li><li><span class="name">log_dir </span><span class="type">(<tt>String</tt>)</span><tt> => '/var/log/chkrootkit'</tt>- <div class="inline"><p> The path to the directory that the today log and expected log will be stored in. </p></div></li><li><span class="name">today_log </span><span class="type">(<tt>String</tt>)</span><tt> => 'log.today'</tt>- <div class="inline"><p> The name of the today log. </p></div></li><li><span class="name">expected_log </span><span class="type">(<tt>String</tt>)</span><tt> => 'log.expected'</tt>- <div class="inline"><p> The name of the expected log. </p></div></li><li><span class="name">diff_mode </span><span class="type">(<tt>Boolean</tt>)</span><tt> => false</tt>- <div class="inline"><p> Whether or not to operate in diff_mode. </p></div></li><li><span class="name">config </span><span class="type">(<tt>Hash</tt>)</span><tt> => {}</tt>- <div class="inline"><p> The changes to make to the chkrootkit configuration file. Augeas is used to implement the changes using the Shellvars lens. </p></div></li>
+    <li><span class="name">package </span><span class="type">(<tt>String</tt>)</span><tt> => 'chkrootkit'</tt>- <div class="inline"><p> The name of the chkrootkit package. </p></div></li><li><span class="name">manage_cron </span><span class="type">(<tt>Boolean</tt>)</span><tt> => false</tt>- <div class="inline"><p> Whether or not chkrootkit will run through cron </p></div></li><li><span class="name">cron_script </span><span class="type">(<tt>String</tt>)</span><tt> => '/usr/local/bin/chkrootkit'</tt>- <div class="inline"><p> The path to the script that cron will run. </p></div></li><li><span class="name">cron_template </span><span class="type">(<tt>String</tt>)</span><tt> => 'chkrootkit/chkrootkit.cron.erb'</tt>- <div class="inline"><p> The template to use for creating cron_script. </p></div></li><li><span class="name">cron_minute </span><span class="type">(<tt>Integer</tt>)</span><tt> => 25</tt>- <div class="inline"><p> The minute to pass to the cron entry. </p></div></li><li><span class="name">cron_hour </span><span class="type">(<tt>Integer</tt>)</span><tt> => 6</tt>- <div class="inline"><p> The hour to pass to the cron entry. </p></div></li><li><span class="name">cf </span><span class="type">(<tt>String</tt>)</span><tt> => '/etc/chkrootkit.conf'</tt>- <div class="inline"><p> The path to chkrootkit.conf. </p></div></li><li><span class="name">chkrootkit </span><span class="type">(<tt>String</tt>)</span><tt> => '/usr/sbin/chkrootkit'</tt>- <div class="inline"><p> The path to the chkrootkit binary. </p></div></li><li><span class="name">log_dir </span><span class="type">(<tt>String</tt>)</span><tt> => '/var/log/chkrootkit'</tt>- <div class="inline"><p> The path to the directory that the today log and expected log will be stored in. </p></div></li><li><span class="name">today_log </span><span class="type">(<tt>String</tt>)</span><tt> => 'log.today'</tt>- <div class="inline"><p> The name of the today log. </p></div></li><li><span class="name">expected_log </span><span class="type">(<tt>String</tt>)</span><tt> => 'log.expected'</tt>- <div class="inline"><p> The name of the expected log. </p></div></li><li><span class="name">diff_mode </span><span class="type">(<tt>Boolean</tt>)</span><tt> => false</tt>- <div class="inline"><p> Sets the DIFF_MODE parameter in chkrootkit.conf </p></div></li><li><span class="name">run_daily </span><span class="type">(<tt>Boolean</tt>)</span><tt> => false</tt>- <div class="inline"><p> Sets the RUN_DAILY parameter in chkrootkit.conf </p></div></li><li><span class="name">run_daily_opts </span><span class="type">(<tt>String</tt>)</span><tt> => '-q'</tt>- <div class="inline"><p> Sets the RUN_DAILY_OPTS parameter in chkrootkit.conf </p></div></li><li><span class="name">mailto </span><span class="type">(<tt>String</tt>)</span><tt> => undef</tt>- <div class="inline"><p> Optional email address to set in root's crontab. Only matters when manage_cron is set. </p></div></li>
   </ul>
 </div>
 </div>
 
     <div id="footer">
-  Generated on Thu May 14 19:08:49 2015 by
+  Generated on Fri May 15 00:27:53 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-1.9.3).
 </div>

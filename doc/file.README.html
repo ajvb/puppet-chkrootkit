@@ -133,9 +133,8 @@ rootkits are present.</p>
 <p>Hiera Data</p>
 
 <pre class="code puppet"><code class="puppet">chkrootkit::diff_mode: true
-chkrootkit::config:
-  RUN_DAILY: 'true'
-  RUN_DAILY_OPTS: '-q'
+chkrootkit::run_daily: true
+chkrootkit::run_daily_opts: '-q'
 </code></pre>
 
 <h3>Define variables explicitly</h3>
@@ -143,10 +142,9 @@ chkrootkit::config:
 <p>Include the Class</p>
 
 <pre class="code puppet"><code class="puppet">class { 'chkrootkit':
-  config =&gt; {
-    'RUN_DAILY' =&gt; 'true',
-    'RUN_DAILY_OPTS' =&gt; '-q'
-  }
+    diff_mode       =&gt; true,
+    run_daily       =&gt; true,
+    run_daily_opts  =&gt; '-q'
 }
 </code></pre>
 
@@ -169,6 +167,14 @@ chkrootkit::config:
 <p>The name of the chkrootkit package.</p>
 
 <p>Default: &#39;chkrootkit&#39;</p>
+
+<h4><code>chkrootkit::manage_cron</code></h4>
+
+<p>Whether or not to manage the cron entry. If set to false, the default daily cron entry
+will remain. If set to true, an entry will be made in the root user&#39;s crontab. The values
+of this entry will be determined by cron_minute, cron_hour, and mailto.</p>
+
+<p>default: false</p>
 
 <h4><code>chkrootkit::cron_script</code></h4>
 
@@ -230,14 +236,27 @@ chkrootkit::config:
 
 <p>Default: false</p>
 
-<h4><code>chkrootkit::config</code></h4>
+<h4><code>chkrootkit::run_daily</code></h4>
 
-<p>The changes to make to the chkrootkit configuration file. Augeas is used to implement
-the changes using the Shellvars lens.</p>
+<p>Sets the RUN_DAILY parameter in chkrootkit.conf.</p>
+
+<p>Default: false</p>
+
+<h4><code>chkrootkit::run_daily_opts</code></h4>
+
+<p>Sets the RUN_DAILY_OPTS parameter in chkrootkit.conf</p>
+
+<p>Default: &#39;-q&#39;</p>
+
+<h4><code>chkconfig::mailto</code></h4>
+
+<p>The user to send emails to. This optional parameter only matters if manage_cron is true.</p>
+
+<p>Default: undef</p>
 </div></div>
 
     <div id="footer">
-  Generated on Thu May 14 19:08:49 2015 by
+  Generated on Fri May 15 00:27:53 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-1.9.3).
 </div>

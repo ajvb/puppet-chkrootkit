@@ -55,9 +55,8 @@ Hiera Data
 
 ````puppet
 chkrootkit::diff_mode: true
-chkrootkit::config:
-  RUN_DAILY: 'true'
-  RUN_DAILY_OPTS: '-q'
+chkrootkit::run_daily: true
+chkrootkit::run_daily_opts: '-q'
 ```
 
 ### Define variables explicitly
@@ -66,10 +65,9 @@ Include the Class
 
 ````puppet
 class { 'chkrootkit':
-  config => {
-    'RUN_DAILY' => 'true',
-    'RUN_DAILY_OPTS' => '-q'
-  }
+    diff_mode       => true,
+    run_daily       => true,
+    run_daily_opts  => '-q'
 }
 ```
 
@@ -90,6 +88,14 @@ class { 'chkrootkit':
 The name of the chkrootkit package.
 
 Default: 'chkrootkit'
+
+#### `chkrootkit::manage_cron`
+
+Whether or not to manage the cron entry. If set to false, the default daily cron entry
+will remain. If set to true, an entry will be made in the root user's crontab. The values
+of this entry will be determined by cron_minute, cron_hour, and mailto.
+
+default: false
 
 #### `chkrootkit::cron_script`
 
@@ -151,7 +157,21 @@ Whether or not to operate in diff_mode.
 
 Default: false
 
-#### `chkrootkit::config`
+#### `chkrootkit::run_daily`
 
-The changes to make to the chkrootkit configuration file. Augeas is used to implement
-the changes using the Shellvars lens.
+Sets the RUN_DAILY parameter in chkrootkit.conf.
+
+Default: false
+
+#### `chkrootkit::run_daily_opts`
+
+Sets the RUN_DAILY_OPTS parameter in chkrootkit.conf
+
+Default: '-q'
+
+
+#### `chkconfig::mailto`
+
+The user to send emails to. This optional parameter only matters if manage_cron is true.
+
+Default: undef
