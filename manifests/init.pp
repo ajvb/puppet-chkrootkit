@@ -63,7 +63,7 @@ class chkrootkit (
     validate_string($::chkrootkit::run_daily_opts)
     validate_string($::chkrootkit::mailto)
 
-    ensure_packages($::chkrootkit::package)
+    package  { $::chkrootkit::package: ensure => present }
 
     if $::chkrootkit::manage_cron {
         $chkrootkit_cmd = $cron_script
@@ -96,7 +96,7 @@ class chkrootkit (
         exec { 'create-today-log':
             command => $chkrootkit_cmd,
             creates => "${log_dir}/${today_log}",
-            require => File[$chkrootkit_cmd],
+            require => [ File[$chkrootkit_cmd], Package[$::chkrootkit::package] ],
             before  => Exec['copy-today-log-to-expected-log']
         }
 
@@ -120,12 +120,13 @@ class chkrootkit (
         require => Package[$::chkrootkit::package]
     }
 
-    file { '/etc/cron.daily/chkrootkit':
+    file { $chkrootkit_cmd:
         ensure  => $ensure_cron_daily,
         content => template($cron_template),
         owner   => 'root',
         group   => 'root',
-        mode    => '0755'
+        mode    => '0755',
+        require => Package[$::chkrootkit::package]
     }
 
     file { $cron_script:
@@ -133,7 +134,8 @@ class chkrootkit (
         content => template($cron_template),
         owner   => 'root',
         group   => 'root',
-        mode    => '0755'
+        mode    => '0755',
+        require => Package[$::chkrootkit::package]
     }
 
     cron { 'chkrootkit':
